@@ -1,0 +1,106 @@
+/* src/components/Login.css */
+.login-form-container {
+  max-width: 400px; /* Um pouco menor que o de cadastro */
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-form-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+.login-form-container p {
+  margin-top: 5px;
+  color: #555;
+}
+
+.login-form-container a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-form-container a:hover {
+  text-decoration: underline;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #444;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 0.15rem rgba(0,123,255,.2);
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #28a745; /* Cor verde para login */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #218838; /* Verde mais escuro */
+}
+.submit-button:active {
+  transform: scale(0.98);
+}
+
+.link-cadastro {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.link-cadastro p {
+  margin: 0;
+  color: #555;
+}
+
+.link-cadastro a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-cadastro a:hover {
+  text-decoration: underline;
+}
