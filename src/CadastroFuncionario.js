@@ -42,7 +42,7 @@ function CadastroUsuario() {
         body: JSON.stringify(dadosCadastro), 
       });
 
-      const responseText = await response.text();
+      //const responseText = await response.text();
 
       if (response.status === 201 || response.ok) {
         alert('Usuário cadastrado com sucesso!');

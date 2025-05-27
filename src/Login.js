@@ -17,7 +17,7 @@ function Login() {
       senha: senha,
     };
     try {
-      const response = await fetch('http://207.211.191.34:8080/api/auth/login', { // Ajuste a URL da sua API de login
+      const response = await fetch('http://207.211.191.34:8080/gerenciamento-usuarios/api/auth/login', { // Ajuste a URL da sua API de login
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,9 +26,10 @@ function Login() {
       });
 
       const responseText = await response.text();
-      console.log('Resposta do backend (texto puro):', responseText);
+      //console.log('Resposta do backend (texto puro):', responseText);
 
       if (response.ok) { 
+        
         const data = JSON.parse(responseText);
         alert('Login realizado com sucesso!'); 
 

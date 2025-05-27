@@ -48,10 +48,7 @@ function CadastroUsuario() {
         body: JSON.stringify(dadosCadastro), 
       });
 
-       const responseBodyText = await response.text(); // Pega mesmo que seja só uma string
-
-    console.log('Status HTTP:', response.status);
-    console.log('Resposta do backend:', responseBodyText);
+       //const responseBodyText = await response.text(); // Pega mesmo que seja só uma string
 
     if (response.status === 201 || response.ok){ // Status 200-299
         const responseBodyText = await response.text(); // O backend retorna uma string simples
