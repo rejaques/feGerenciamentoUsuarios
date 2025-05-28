@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './components/CadastroUsuario.css'
+import AvisoPopup from './PopUp';
 
 function CadastroUsuario() {
   const [nome, setNome] = useState('');
@@ -16,6 +17,32 @@ function CadastroUsuario() {
   const [estado, setEstado] = useState('');
   const [cep, setCep] = useState('');
   const navigate = useNavigate();
+
+  // Estado para controlar o pop-up
+      const [popupConfig, setPopupConfig] = useState({
+        visivel: false,
+        mensagem: '',
+        titulo: '',
+        tipo: 'aviso', // 'aviso', 'sucesso', 'erro'
+        onConfirmCallback: null,
+      });
+    
+      const mostrarPopup = (mensagem, titulo, tipo = 'aviso', onConfirmCallback = null) => {
+        setPopupConfig({
+          visivel: true,
+          mensagem,
+          titulo,
+          tipo,
+          onConfirmCallback,
+        });
+      };
+    
+      const fecharPopup = () => {
+        if (popupConfig.onConfirmCallback) {
+          popupConfig.onConfirmCallback();
+        }
+        setPopupConfig({ visivel: false, mensagem: '', titulo: '', tipo: 'aviso', onConfirmCallback: null });
+      };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,15 +75,11 @@ function CadastroUsuario() {
         body: JSON.stringify(dadosCadastro), 
       });
 
-       const responseBodyText = await response.text(); // Pega mesmo que seja só uma string
-
-    console.log('Status HTTP:', response.status);
-    console.log('Resposta do backend:', responseBodyText);
 
     if (response.status === 201 || response.ok){ // Status 200-299
         const responseBodyText = await response.text(); // O backend retorna uma string simples
         console.log('Resposta do backend (texto):', responseBodyText);
-        alert(responseBodyText || 'Cliente cadastrado com sucesso!'); // Usa o texto da resposta
+        mostrarPopup(responseBodyText, 'Sucesso!', 'sucesso'); // Usa o texto da resposta
         // Limpar formulário, etc.
         setNome(''); setEmail(''); setSenha(''); setLogin('');
         setRua(''); setNumero(''); setComplemento(''); setBairro('');
@@ -68,29 +91,18 @@ function CadastroUsuario() {
 
       } else { // Status de erro (4xx, 5xx)
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
-        try {
-          // Tenta pegar uma mensagem de erro mais específica do corpo da resposta
-          const errorData = await response.json(); // Se o backend enviar JSON no erro
-          console.error('Erro ao cadastrar (dados do erro):', errorData);
-          // Spring Validation errors podem vir em um formato específico
-          if (errorData.errors && Array.isArray(errorData.errors)) {
-              errorMessage = errorData.errors.map(err => `${err.field}: ${err.defaultMessage}`).join('\n');
-          } else if (errorData.message) {
-              errorMessage = errorData.message;
-          } else if (typeof errorData === 'string') { // Se for uma string simples de erro
-              errorMessage = errorData;
-          }
-        } catch (e) {
-          // Se o corpo do erro não for JSON, use o statusText ou leia como texto
-          const errorText = await response.text();
-          if (errorText) errorMessage = errorText;
-          console.error('Erro ao cadastrar (resposta não JSON):', errorText);
+        if (response.headers.get("content-type")?.includes("application/json")) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || (errorData.errors ? errorData.errors.map(e => e.defaultMessage).join(', ') : errorMessage);
+        } else {
+            const errorText = await response.text();
+            if (errorText) errorMessage = errorText;
         }
-        alert(`Erro ao cadastrar:\n${errorMessage}`);
+        throw new Error(errorMessage);
       }
     } catch (error) {
       console.error('Erro na requisição (fetch falhou):', error);
-      alert('Não foi possível conectar ao servidor. Verifique sua conexão ou o console para mais detalhes.');
+      mostrarPopup(error.message, 'Erro ao salvar!', 'erro')
     }
   };
 
@@ -119,6 +131,16 @@ function CadastroUsuario() {
   };
 
   return (
+    <div>
+      {/* Renderiza o Pop-up se estiver visível */}
+      {popupConfig.visivel && (
+        <AvisoPopup
+          mensagem={popupConfig.mensagem}
+          titulo={popupConfig.titulo}
+          tipo={popupConfig.tipo}
+          onConfirm={fecharPopup}
+        />
+      )}
     <div className="cadastro-form-container">
       <form onSubmit={handleSubmit}>
         <h2>Cadastro de Usuário</h2>
@@ -198,6 +220,7 @@ function CadastroUsuario() {
           
         </div>
       </form>
+    </div>
     </div>
   );
 }

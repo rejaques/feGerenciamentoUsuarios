@@ -2,11 +2,38 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Importe useNavigate
 import './components/Login.css'; // Vamos criar este arquivo CSS
+import AvisoPopup from './PopUp';
 
 function Login() {
   const [emailOuLogin, setEmailOuLogin] = useState('');
   const [senha, setSenha] = useState('');
   const navigate = useNavigate(); // Hook para navegação programática
+
+  // Estado para controlar o pop-up
+  const [popupConfig, setPopupConfig] = useState({
+    visivel: false,
+    mensagem: '',
+    titulo: '',
+    tipo: 'aviso', // 'aviso', 'sucesso', 'erro'
+    onConfirmCallback: null,
+  });
+
+  const mostrarPopup = (mensagem, titulo, tipo = 'aviso', onConfirmCallback = null) => {
+    setPopupConfig({
+      visivel: true,
+      mensagem,
+      titulo,
+      tipo,
+      onConfirmCallback,
+    });
+  };
+
+  const fecharPopup = () => {
+    if (popupConfig.onConfirmCallback) {
+      popupConfig.onConfirmCallback();
+    }
+    setPopupConfig({ visivel: false, mensagem: '', titulo: '', tipo: 'aviso', onConfirmCallback: null });
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,7 +44,7 @@ function Login() {
       senha: senha,
     };
     try {
-      const response = await fetch('http://207.211.191.34:8080/api/auth/login', { // Ajuste a URL da sua API de login
+      const response = await fetch('http://207.211.191.34:8080/gerenciamento-usuarios/api/auth/login', { // Ajuste a URL da sua API de login
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,11 +53,10 @@ function Login() {
       });
 
       const responseText = await response.text();
-      console.log('Resposta do backend (texto puro):', responseText);
 
       if (response.ok) { 
         const data = JSON.parse(responseText);
-        alert('Login realizado com sucesso!'); 
+        //alert('Login realizado com sucesso!'); 
 
         // Salvar no localStorage
         localStorage.setItem('tipoUsuario', data.tipoUsuario);
@@ -40,14 +66,15 @@ function Login() {
         setEmailOuLogin('');
         setSenha('');
 
-        setTimeout(() => {
-          if(data.tipoUsuario === "Cliente")
-            navigate('/alterarDados'); 
-          else
-            navigate('/adm')
-        }, 1000); 
-
-      } else { 
+        mostrarPopup('Login realizado com sucesso!', 'Sucesso!', 'sucesso', () => {
+          setTimeout(() => {
+            if(data.tipoUsuario === "Cliente") {
+              navigate('/alterarDados'); 
+            } else {
+              navigate('/adm')
+            }
+          }, 500);} );
+        } else { 
         console.error(`Erro no login - Status: ${response.status}, Resposta: ${responseText}`);
         let errorMessage = responseText; 
         try {
@@ -57,7 +84,7 @@ function Login() {
           }
         } catch (parseError) {
         }
-        alert(`Erro no login: ${errorMessage}`);
+        mostrarPopup(`Erro no login: ${errorMessage}`, 'Falha no Login', 'erro');
       }
     } catch (networkError) { 
       console.error('Erro na requisição de login (networkError):', networkError);
@@ -68,11 +95,21 @@ function Login() {
 
   return (
     <div>
+      {/* Renderiza o Pop-up se estiver visível */}
+      {popupConfig.visivel && (
+        <AvisoPopup
+          mensagem={popupConfig.mensagem}
+          titulo={popupConfig.titulo}
+          tipo={popupConfig.tipo}
+          onConfirm={fecharPopup}
+        />
+      )}
+    <div>
         <div className="login-form-container">
             <form onSubmit={handleSubmit}>
                 <h2>Login</h2>
                 <div className="form-group">
-                    <label htmlFor="emailOuLogin">Email ou Login:</label>
+                    <label htmlFor="emailOuLogin">Email:</label>
                     <input
                         type="text" // Pode ser "email" se for sempre email
                         id="emailOuLogin"
@@ -103,6 +140,7 @@ function Login() {
                 </div>
             </form>
         </div>
+    </div>
     </div>
     );
 }

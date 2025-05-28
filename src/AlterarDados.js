@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './components/CadastroUsuario.css'
+import AvisoPopup from './PopUp';
 
 function AlterarDados() {
   const [nome, setNome] = useState('');
@@ -19,6 +20,31 @@ function AlterarDados() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true); // Para feedback de carregamento
   const [error, setError] = useState(null); // Para mensagens de erro
+
+    const [popupConfig, setPopupConfig] = useState({
+          visivel: false,
+          mensagem: '',
+          titulo: '',
+          tipo: 'aviso', // 'aviso', 'sucesso', 'erro'
+          onConfirmCallback: null,
+        });
+      
+        const mostrarPopup = (mensagem, titulo, tipo = 'aviso', onConfirmCallback = null) => {
+          setPopupConfig({
+            visivel: true,
+            mensagem,
+            titulo,
+            tipo,
+            onConfirmCallback,
+          });
+        };
+      
+        const fecharPopup = () => {
+          if (popupConfig.onConfirmCallback) {
+            popupConfig.onConfirmCallback();
+          }
+          setPopupConfig({ visivel: false, mensagem: '', titulo: '', tipo: 'aviso', onConfirmCallback: null });
+        };
 
   // useEffect para buscar os dados do usuário quando o componente montar
   useEffect(() => {
@@ -82,6 +108,7 @@ function AlterarDados() {
         }
       } catch (err) {
         console.error("Falha ao buscar dados do usuário:", err);
+        mostrarPopup(err.message, 'Erro ao buscar usuário!', 'erro');
         setError(err.message || "Não foi possível carregar os dados do usuário.");
         // Poderia redirecionar para login se for erro de autenticação 401/403
         // if (err.message.includes("401") || err.message.includes("403")) {
@@ -141,7 +168,7 @@ function AlterarDados() {
 
       if (response.ok) {
         const responseBodyText = await response.text(); // Ou response.json() se o backend retornar JSON
-        alert(responseBodyText || 'Dados atualizados com sucesso!');
+        mostrarPopup(responseBodyText, 'Dados alterados!', 'sucesso');
         // Opcional: redirecionar ou atualizar dados na tela se necessário
         // navigate('/perfil'); // Exemplo
       } else {
@@ -158,7 +185,7 @@ function AlterarDados() {
     } catch (err) {
       console.error("Falha ao atualizar dados:", err);
       setError(err.message || "Não foi possível salvar as alterações.");
-      alert(`Erro ao salvar: ${err.message || "Tente novamente."}`);
+      mostrarPopup(err.message, 'Não foi possível salvar as alterações!', 'erro');
     }
   };
 
@@ -185,12 +212,22 @@ function AlterarDados() {
         
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
-        alert("Não foi possível buscar o CEP. Verifique e tente novamente.");
+        mostrarPopup(error.message, 'Verifique o cep digitado', 'erro');
       }
     }
   };
 
   return (
+    <div>
+      {/* Renderiza o Pop-up se estiver visível */}
+      {popupConfig.visivel && (
+        <AvisoPopup
+          mensagem={popupConfig.mensagem}
+          titulo={popupConfig.titulo}
+          tipo={popupConfig.tipo}
+          onConfirm={fecharPopup}
+        />
+      )}
     <div className="cadastro-form-container"> {/* Reutilizando a classe para manter o estilo */}
       <form onSubmit={handleSubmit}>
         <h2>Alterar Dados do Usuário</h2>
@@ -263,6 +300,7 @@ function AlterarDados() {
 
         <button type="submit" className="submit-button">Salvar Alterações</button>
       </form>
+    </div>
     </div>
   );
 }

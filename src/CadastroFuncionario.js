@@ -1,6 +1,8 @@
 // src/components/CadastroUsuario.js
 import React, { useState } from 'react';
 import './components/CadastroUsuario.css'
+import { Link, useNavigate } from 'react-router-dom';
+import AvisoPopup from './PopUp';
 
 function CadastroUsuario() {
   const [nome, setNome] = useState('');
@@ -14,6 +16,33 @@ function CadastroUsuario() {
   const [cidade, setCidade] = useState('');
   const [estado, setEstado] = useState('');
   const [cep, setCep] = useState('');
+  const navigate = useNavigate();
+
+  // Estado para controlar o pop-up
+    const [popupConfig, setPopupConfig] = useState({
+      visivel: false,
+      mensagem: '',
+      titulo: '',
+      tipo: 'aviso', // 'aviso', 'sucesso', 'erro'
+      onConfirmCallback: null,
+    });
+  
+    const mostrarPopup = (mensagem, titulo, tipo = 'aviso', onConfirmCallback = null) => {
+      setPopupConfig({
+        visivel: true,
+        mensagem,
+        titulo,
+        tipo,
+        onConfirmCallback,
+      });
+    };
+  
+    const fecharPopup = () => {
+      if (popupConfig.onConfirmCallback) {
+        popupConfig.onConfirmCallback();
+      }
+      setPopupConfig({ visivel: false, mensagem: '', titulo: '', tipo: 'aviso', onConfirmCallback: null });
+    };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,22 +65,41 @@ function CadastroUsuario() {
     };
     try {
       const response = await fetch('http://207.211.191.34:8080/gerenciamento-usuarios/api/cadastro/funcionario', { 
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(dadosCadastro), 
       });
 
-      const responseText = await response.text();
 
-      if (response.status === 201 || response.ok) {
-        alert('Usuário cadastrado com sucesso!');
-      } else {
-        alert('Erro ao cadastrar: ');
+      if (response.status === 201 || response.ok){ // Status 200-299
+        const responseBodyText = await response.text(); // O backend retorna uma string simples
+        console.log('Resposta do backend (texto):', responseBodyText);
+        mostrarPopup(responseBodyText, 'Sucesso!', 'sucesso'); // Usa o texto da resposta
+        // Limpar formulário, etc.
+        setNome(''); setEmail(''); setSenha(''); setLogin('');
+        setRua(''); setNumero(''); setComplemento(''); setBairro('');
+        setCidade(''); setEstado(''); setCep('');
+        
+        setTimeout(() => {
+          navigate('/adm'); // Redireciona para a rota de login
+        }, 1500);
+
+      } else { // Status de erro (4xx, 5xx)
+        let errorMessage = `Erro: ${response.status} ${response.statusText}`;
+        if (response.headers.get("content-type")?.includes("application/json")) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || (errorData.errors ? errorData.errors.map(e => e.defaultMessage).join(', ') : errorMessage);
+        } else {
+            const errorText = await response.text();
+            if (errorText) errorMessage = errorText;
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      console.error('Erro na requisição:', error);
-      alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+      console.error('Erro na requisição (fetch falhou):', error);
+      mostrarPopup(error.message, 'Erro ao salvar!', 'erro')
     }
   };
 
@@ -74,15 +122,25 @@ function CadastroUsuario() {
         // Você pode querer focar no campo 'numero' aqui
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
-        alert("Não foi possível buscar o CEP. Verifique e tente novamente.");
+        mostrarPopup(error, 'CEP não encontrado', 'aviso');
       }
     }
   };
 
   return (
+    <div>
+      {/* Renderiza o Pop-up se estiver visível */}
+      {popupConfig.visivel && (
+        <AvisoPopup
+          mensagem={popupConfig.mensagem}
+          titulo={popupConfig.titulo}
+          tipo={popupConfig.tipo}
+          onConfirm={fecharPopup}
+        />
+      )}
     <div className="cadastro-form-container">
       <form onSubmit={handleSubmit}>
-        <h2>Cadastro de Usuário</h2>
+        <h2>Cadastro de funcionario</h2>
 
         <fieldset className="form-fieldset">
           <legend className="fieldset-legend">Dados Pessoais</legend>
@@ -152,6 +210,7 @@ function CadastroUsuario() {
 
         <button type="submit" className="submit-button">Cadastrar</button>
       </form>
+    </div>
     </div>
   );
 }
