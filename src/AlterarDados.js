@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './components/CadastroUsuario.css'
+import AvisoPopup from './PopUp';
 
 function AlterarDados() {
   const [nome, setNome] = useState('');
@@ -21,6 +22,32 @@ function AlterarDados() {
   const [error, setError] = useState(null); 
 
 
+    const [popupConfig, setPopupConfig] = useState({
+          visivel: false,
+          mensagem: '',
+          titulo: '',
+          tipo: 'aviso', // 'aviso', 'sucesso', 'erro'
+          onConfirmCallback: null,
+        });
+      
+        const mostrarPopup = (mensagem, titulo, tipo = 'aviso', onConfirmCallback = null) => {
+          setPopupConfig({
+            visivel: true,
+            mensagem,
+            titulo,
+            tipo,
+            onConfirmCallback,
+          });
+        };
+      
+        const fecharPopup = () => {
+          if (popupConfig.onConfirmCallback) {
+            popupConfig.onConfirmCallback();
+          }
+          setPopupConfig({ visivel: false, mensagem: '', titulo: '', tipo: 'aviso', onConfirmCallback: null });
+        };
+
+  // useEffect para buscar os dados do usuário quando o componente montar
   useEffect(() => {
     const fetchUsuarioData = async () => {
       setIsLoading(true);
@@ -78,6 +105,7 @@ function AlterarDados() {
         }
       } catch (err) {
         console.error("Falha ao buscar dados do usuário:", err);
+        mostrarPopup(err.message, 'Erro ao buscar usuário!', 'erro');
         setError(err.message || "Não foi possível carregar os dados do usuário.");
       } finally {
         setIsLoading(false);
@@ -130,8 +158,10 @@ function AlterarDados() {
       });
 
       if (response.ok) {
-        const responseBodyText = await response.text(); 
-        alert(responseBodyText || 'Dados atualizados com sucesso!');
+        const responseBodyText = await response.text(); // Ou response.json() se o backend retornar JSON
+        mostrarPopup(responseBodyText, 'Dados alterados!', 'sucesso');
+        // Opcional: redirecionar ou atualizar dados na tela se necessário
+        // navigate('/perfil'); // Exemplo
       } else {
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
         if (response.headers.get("content-type")?.includes("application/json")) {
@@ -146,7 +176,7 @@ function AlterarDados() {
     } catch (err) {
       console.error("Falha ao atualizar dados:", err);
       setError(err.message || "Não foi possível salvar as alterações.");
-      alert(`Erro ao salvar: ${err.message || "Tente novamente."}`);
+      mostrarPopup(err.message, 'Não foi possível salvar as alterações!', 'erro');
     }
   };
 
@@ -173,13 +203,23 @@ function AlterarDados() {
         
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
-        alert("Não foi possível buscar o CEP. Verifique e tente novamente.");
+        mostrarPopup(error.message, 'Verifique o cep digitado', 'erro');
       }
     }
   };
 
   return (
-    <div className="cadastro-form-container"> {}
+    <div>
+      {/* Renderiza o Pop-up se estiver visível */}
+      {popupConfig.visivel && (
+        <AvisoPopup
+          mensagem={popupConfig.mensagem}
+          titulo={popupConfig.titulo}
+          tipo={popupConfig.tipo}
+          onConfirm={fecharPopup}
+        />
+      )}
+    <div className="cadastro-form-container"> {/* Reutilizando a classe para manter o estilo */}
       <form onSubmit={handleSubmit}>
         <h2>Alterar Dados do Usuário</h2>
 
@@ -251,6 +291,7 @@ function AlterarDados() {
 
         <button type="submit" className="submit-button">Salvar Alterações</button>
       </form>
+    </div>
     </div>
   );
 }
