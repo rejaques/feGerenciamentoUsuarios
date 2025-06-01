@@ -11,7 +11,6 @@ function Adm() {
     navigate('/alterarDados');
   };
 
-  // Função para o botão da funcionalidade futura
   const handleNavigateToFutureScreen = () => {
     navigate('/cadastroFuncionario');
   };

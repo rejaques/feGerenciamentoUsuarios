@@ -23,7 +23,6 @@ function CadastroUsuario() {
       email,
       senha,
       login,
-      // Endereço (verifique os nomes exatos que seu backend espera)
       endereco: {
         rua,
         numero,
@@ -41,8 +40,6 @@ function CadastroUsuario() {
         },
         body: JSON.stringify(dadosCadastro), 
       });
-
-      //const responseText = await response.text();
 
       if (response.status === 201 || response.ok) {
         alert('Usuário cadastrado com sucesso!');
@@ -71,7 +68,6 @@ function CadastroUsuario() {
         setBairro(data.bairro || '');
         setCidade(data.localidade || '');
         setEstado(data.uf || '');
-        // Você pode querer focar no campo 'numero' aqui
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
         alert("Não foi possível buscar o CEP. Verifique e tente novamente.");

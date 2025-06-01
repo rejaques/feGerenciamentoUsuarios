@@ -1,7 +1,7 @@
 // src/components/Login.js
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Importe useNavigate
-import './components/Login.css'; // Vamos criar este arquivo CSS
+import { Link, useNavigate } from 'react-router-dom'; 
+import './components/Login.css';
 
 function Login() {
   const [emailOuLogin, setEmailOuLogin] = useState('');
@@ -17,7 +17,7 @@ function Login() {
       senha: senha,
     };
     try {
-      const response = await fetch('http://207.211.191.34:8080/gerenciamento-usuarios/api/auth/login', { // Ajuste a URL da sua API de login
+      const response = await fetch('http://207.211.191.34:8080/gerenciamento-usuarios/api/auth/login', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,18 +26,15 @@ function Login() {
       });
 
       const responseText = await response.text();
-      //console.log('Resposta do backend (texto puro):', responseText);
 
       if (response.ok) { 
         
         const data = JSON.parse(responseText);
         alert('Login realizado com sucesso!'); 
 
-        // Salvar no localStorage
         localStorage.setItem('tipoUsuario', data.tipoUsuario);
         localStorage.setItem('idUsuario', data.idUsuario.toString()); // Salva como string
 
-        // Limpar campos do formulário
         setEmailOuLogin('');
         setSenha('');
 
@@ -75,7 +72,7 @@ function Login() {
                 <div className="form-group">
                     <label htmlFor="emailOuLogin">Email ou Login:</label>
                     <input
-                        type="text" // Pode ser "email" se for sempre email
+                        type="text" 
                         id="emailOuLogin"
                         value={emailOuLogin}
                         onChange={(e) => setEmailOuLogin(e.target.value)}

@@ -17,10 +17,10 @@ function AlterarDados() {
   const [estado, setEstado] = useState('');
   const [cep, setCep] = useState('');
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); // Para feedback de carregamento
-  const [error, setError] = useState(null); // Para mensagens de erro
+  const [isLoading, setIsLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
-  // useEffect para buscar os dados do usuário quando o componente montar
+
   useEffect(() => {
     const fetchUsuarioData = async () => {
       setIsLoading(true);
@@ -33,13 +33,10 @@ function AlterarDados() {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            // Se precisar de autenticação (ex: Bearer token):
-            // 'Authorization': `Bearer ${localStorage.getItem('userToken')}`
           },
         });
 
         if (!response.ok) {
-          // Se o backend retornar um erro específico em JSON
           if (response.headers.get("content-type")?.includes("application/json")) {
             const errorData = await response.json();
             throw new Error(errorData.message || `Erro ao buscar dados: ${response.status}`);
@@ -71,7 +68,6 @@ function AlterarDados() {
             setCep(data.dadosEndereco.cep || '');
         } else {
             console.warn("Dados de endereço não encontrados na resposta da API.");
-            // Limpar campos de endereço se não vierem dados
             setRua('');
             setNumero('');
             setComplemento('');
@@ -83,10 +79,6 @@ function AlterarDados() {
       } catch (err) {
         console.error("Falha ao buscar dados do usuário:", err);
         setError(err.message || "Não foi possível carregar os dados do usuário.");
-        // Poderia redirecionar para login se for erro de autenticação 401/403
-        // if (err.message.includes("401") || err.message.includes("403")) {
-        //   navigate('/login');
-        // }
       } finally {
         setIsLoading(false);
       }
@@ -95,10 +87,10 @@ function AlterarDados() {
     fetchUsuarioData();
   }, [navigate]);
 
-  // Função para lidar com a submissão do formulário (atualização)
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null); // Limpa erros anteriores
+    setError(null); 
 
     const idUsuario = localStorage.getItem('idUsuario');
 
@@ -120,8 +112,6 @@ function AlterarDados() {
       }
     };
 
-    // Remove a senha do payload se ela não foi alterada (estiver vazia)
-    // Isso evita enviar uma senha vazia para o backend se não for intenção mudar.
     if (!senha) {
         delete dadosAtualizados.senha;
     }
@@ -140,10 +130,8 @@ function AlterarDados() {
       });
 
       if (response.ok) {
-        const responseBodyText = await response.text(); // Ou response.json() se o backend retornar JSON
+        const responseBodyText = await response.text(); 
         alert(responseBodyText || 'Dados atualizados com sucesso!');
-        // Opcional: redirecionar ou atualizar dados na tela se necessário
-        // navigate('/perfil'); // Exemplo
       } else {
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
         if (response.headers.get("content-type")?.includes("application/json")) {
@@ -168,7 +156,7 @@ function AlterarDados() {
 
   // Função para buscar CEP 
   const handleCepBlur = async (event) => {
-    const cepValue = event.target.value.replace(/\D/g, ''); // Remove não dígitos
+    const cepValue = event.target.value.replace(/\D/g, ''); 
     if (cepValue.length === 8) {
       try {
         const response = await fetch(`https://viacep.com.br/ws/${cepValue}/json/`);
@@ -191,7 +179,7 @@ function AlterarDados() {
   };
 
   return (
-    <div className="cadastro-form-container"> {/* Reutilizando a classe para manter o estilo */}
+    <div className="cadastro-form-container"> {}
       <form onSubmit={handleSubmit}>
         <h2>Alterar Dados do Usuário</h2>
 

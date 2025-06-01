@@ -16,18 +16,18 @@
 }
 
 .form-fieldset {
-  border: 1px solid #ddd; /* Borda sutil para o fieldset */
+  border: 1px solid #ddd;
   padding: 20px;
   margin-bottom: 25px;
   border-radius: 6px;
 }
 
 .fieldset-legend {
-  font-size: 1.2em; /* Tamanho da legenda */
-  font-weight: 600; /* Peso da fonte */
-  color: #0056b3; /* Cor para destacar a legenda */
-  padding: 0 10px; /* Espaçamento interno para não colar na borda */
-  margin-left: 10px; /* Pequeno recuo */
+  font-size: 1.2em; 
+  font-weight: 600; 
+  color: #0056b3; 
+  padding: 0 10px; 
+  margin-left: 10px; 
 }
 
 .form-group {
@@ -46,8 +46,8 @@
 .form-group input[type="email"],
 .form-group input[type="password"] {
   width: 100%;
-  padding: 10px 12px; /* Ajuste no padding */
-  border: 1px solid #ccc; /* Borda um pouco mais visível */
+  padding: 10px 12px; 
+  border: 1px solid #ccc; 
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1rem;
@@ -59,14 +59,14 @@
 .form-group input[type="password"]:focus {
   border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 0 0.15rem rgba(0,123,255,.2); /* Sombra de foco mais sutil */
+  box-shadow: 0 0 0 0.15rem rgba(0,123,255,.2); 
 }
 
 /* Estilos para layout em colunas */
 .form-row {
   display: flex;
-  gap: 15px; /* Espaço entre os campos na mesma linha */
-  align-items: flex-start; /* Alinha os itens no topo, útil se os labels tiverem alturas diferentes */
+  gap: 15px; 
+  align-items: flex-start; 
 }
 
 .form-row .form-group {
@@ -74,17 +74,17 @@
   margin-bottom: 0; /* Remove a margem inferior dos form-groups dentro de uma linha, já que o form-row terá */
 }
 
-/* Classes para larguras específicas se necessário (exemplo com 2 e 3 colunas) */
+
 .half-width {
-  flex-basis: calc(50% - 7.5px); /* 50% menos metade do gap */
+  flex-basis: calc(50% - 7.5px);
 }
 
 .third-width {
-  flex-basis: calc(33.333% - 10px); /* Aproximadamente 1/3 menos parte do gap */
+  flex-basis: calc(33.333% - 10px); 
 }
 
 .two-thirds-width {
-  flex-basis: calc(66.666% - 5px); /* Aproximadamente 2/3 menos parte do gap */
+  flex-basis: calc(66.666% - 5px); 
 }
 
 
@@ -99,7 +99,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   transition: background-color 0.2s ease-in-out, transform 0.1s ease;
-  margin-top: 10px; /* Espaço acima do botão */
+  margin-top: 10px; 
 }
 
 .submit-button:hover {
@@ -131,76 +131,74 @@
 }
 
 .label-with-tooltip {
-  display: flex; /* Organiza o label e o ícone na mesma linha */
-  align-items: center; /* Alinha verticalmente o texto do label e o ícone */
-  margin-bottom: 0.25rem; /* Pequeno espaço abaixo do label + ícone, ajuste conforme necessário */
+  display: flex; 
+  align-items: center; 
+  margin-bottom: 0.25rem; 
 }
 
 .label-with-tooltip label {
-  margin-bottom: 0; /* Remove a margem inferior padrão do label, se houver */
-  /* O espaçamento entre o texto "Nova Senha:" e o ícone "?" é dado pelo margin-left no .tooltip-container */
+  margin-bottom: 0; 
 }
 
 .tooltip-container {
-  position: relative; /* Essencial para o posicionamento absoluto da tooltip */
-  display: inline-block; /* Faz com que o container se ajuste ao conteúdo */
-  margin-left: 8px; /* Espaço entre o texto "Nova Senha:" e o ícone "?" */
+  position: relative; 
+  display: inline-block; 
+  margin-left: 8px; 
 }
 
 .tooltip-icon {
-  display: inline-flex; /* Permite centralizar o "?" usando align-items e justify-content */
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
-  width: 20px; /* Largura do círculo do ícone */
-  height: 20px; /* Altura do círculo do ícone */
-  background-color: #6c757d; /* Cor de fundo do ícone (um cinza padrão) */
-  color: white; /* Cor do "?" */
-  border-radius: 50%; /* Faz o ícone ser circular */
-  font-size: 13px; /* Tamanho da fonte do "?" */
+  width: 20px; 
+  height: 20px; 
+  background-color: #6c757d; 
+  color: white; 
+  border-radius: 50%; 
+  font-size: 13px; 
   font-weight: bold;
-  cursor: help; /* Muda o cursor para indicar que é um elemento de ajuda */
-  user-select: none; /* Impede que o texto do ícone seja selecionado */
+  cursor: help; 
+  user-select: none; 
 }
 
 /* Estilo para quando o ícone está focado via teclado */
 .tooltip-icon:focus {
-  outline: none; /* Remove o outline padrão */
-  box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5); /* Adiciona um brilho de foco, similar ao Bootstrap */
+  outline: none; 
+  box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5); 
 }
 
 .tooltip-text {
-  visibility: hidden; /* Começa invisível */
-  opacity: 0; /* Começa totalmente transparente */
-  width: 200px; /* Largura da caixa da tooltip */
-  background-color: #333; /* Cor de fundo escura para a tooltip */
-  color: #fff; /* Cor do texto da tooltip */
+  visibility: hidden; 
+  opacity: 0; 
+  width: 200px;
+  background-color: #333; 
+  color: #fff; 
   text-align: center;
-  border-radius: 6px; /* Bordas arredondadas */
-  padding: 8px 10px; /* Espaçamento interno */
+  border-radius: 6px; 
+  padding: 8px 10px; 
   position: absolute;
-  z-index: 1; /* Garante que a tooltip fique sobre outros elementos */
+  z-index: 1; 
 
-  /* Posicionamento: acima do ícone e centralizado */
-  bottom: 145%; /* Ajuste esta porcentagem para mudar a distância vertical acima do ícone */
+
+  bottom: 145%; 
   left: 50%;
-  transform: translateX(-50%); /* Truque para centralizar horizontalmente */
+  transform: translateX(-50%); 
 
   font-size: 13px;
-  font-weight: normal; /* Garante que o texto não fique em negrito se herdado */
-  line-height: 1.4; /* Espaçamento entre linhas para melhor legibilidade */
-  transition: opacity 0.3s ease, visibility 0.3s ease; /* Animação suave de aparição */
+  font-weight: normal; 
+  line-height: 1.4; 
+  transition: opacity 0.3s ease, visibility 0.3s ease; 
 }
 
-/* Pequena seta abaixo da tooltip para apontar para o ícone */
 .tooltip-text::after {
   content: "";
   position: absolute;
-  top: 100%; /* Posiciona a seta na parte inferior da tooltip */
+  top: 100%; 
   left: 50%;
-  margin-left: -5px; /* Metade da largura da seta para centralizar */
+  margin-left: -5px; 
   border-width: 5px;
   border-style: solid;
-  border-color: #333 transparent transparent transparent; /* Cor da seta (apontando para baixo) */
+  border-color: #333 transparent transparent transparent; 
 }
 
 /* Mostra a tooltip quando o mouse passa sobre o container ou quando o container (ou algo dentro dele) recebe foco */

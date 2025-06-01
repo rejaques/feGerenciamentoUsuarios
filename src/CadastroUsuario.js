@@ -48,37 +48,36 @@ function CadastroUsuario() {
         body: JSON.stringify(dadosCadastro), 
       });
 
-       //const responseBodyText = await response.text(); // Pega mesmo que seja só uma string
+
 
     if (response.status === 201 || response.ok){ // Status 200-299
-        const responseBodyText = await response.text(); // O backend retorna uma string simples
+        const responseBodyText = await response.text(); 
         console.log('Resposta do backend (texto):', responseBodyText);
-        alert(responseBodyText || 'Cliente cadastrado com sucesso!'); // Usa o texto da resposta
+        alert(responseBodyText || 'Cliente cadastrado com sucesso!'); 
         // Limpar formulário, etc.
         setNome(''); setEmail(''); setSenha(''); setLogin('');
         setRua(''); setNumero(''); setComplemento(''); setBairro('');
         setCidade(''); setEstado(''); setCep('');
         
         setTimeout(() => {
-          navigate('/login'); // Redireciona para a rota de login
+          navigate('/login'); 
         }, 1500);
 
       } else { // Status de erro (4xx, 5xx)
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
         try {
-          // Tenta pegar uma mensagem de erro mais específica do corpo da resposta
-          const errorData = await response.json(); // Se o backend enviar JSON no erro
+
+          const errorData = await response.json(); 
           console.error('Erro ao cadastrar (dados do erro):', errorData);
-          // Spring Validation errors podem vir em um formato específico
+
           if (errorData.errors && Array.isArray(errorData.errors)) {
               errorMessage = errorData.errors.map(err => `${err.field}: ${err.defaultMessage}`).join('\n');
           } else if (errorData.message) {
               errorMessage = errorData.message;
-          } else if (typeof errorData === 'string') { // Se for uma string simples de erro
+          } else if (typeof errorData === 'string') { 
               errorMessage = errorData;
           }
         } catch (e) {
-          // Se o corpo do erro não for JSON, use o statusText ou leia como texto
           const errorText = await response.text();
           if (errorText) errorMessage = errorText;
           console.error('Erro ao cadastrar (resposta não JSON):', errorText);
@@ -107,7 +106,6 @@ function CadastroUsuario() {
         setBairro(data.bairro || '');
         setCidade(data.localidade || '');
         setEstado(data.uf || '');
-        // Você pode querer focar no campo 'numero' aqui
       } catch (error) {
         console.error("Erro ao buscar CEP:", error);
         alert("Não foi possível buscar o CEP. Verifique e tente novamente.");

@@ -1,6 +1,7 @@
 /* src/components/Login.css */
+
 .login-form-container {
-  max-width: 400px; /* Um pouco menor que o de cadastro */
+  max-width: 400px; 
   margin: 60px auto;
   padding: 30px;
   background-color: #f9f9f9;
@@ -66,7 +67,7 @@
 .submit-button {
   width: 100%;
   padding: 12px 15px;
-  background-color: #28a745; /* Cor verde para login */
+  background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
@@ -78,7 +79,7 @@
 }
 
 .submit-button:hover {
-  background-color: #218838; /* Verde mais escuro */
+  background-color: #218838; 
 }
 .submit-button:active {
   transform: scale(0.98);
