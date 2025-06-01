@@ -158,15 +158,16 @@ function AlterarDados() {
       });
 
       if (response.ok) {
-        const responseBodyText = await response.text(); // Ou response.json() se o backend retornar JSON
+        const responseBodyText = await response.text(); 
         mostrarPopup(responseBodyText, 'Dados alterados!', 'sucesso');
-        // Opcional: redirecionar ou atualizar dados na tela se necessário
-        // navigate('/perfil'); // Exemplo
       } else {
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
         if (response.headers.get("content-type")?.includes("application/json")) {
             const errorData = await response.json();
-            errorMessage = errorData.message || (errorData.errors ? errorData.errors.map(e => e.defaultMessage).join(', ') : errorMessage);
+            errorMessage = errorData.message || 
+               (errorData.erros ? errorData.erros.join(', ') : 
+               (errorData.errors ? errorData.errors.map(e => e.defaultMessage || e).join(', ') : errorMessage));
+
         } else {
             const errorText = await response.text();
             if (errorText) errorMessage = errorText;

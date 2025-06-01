@@ -89,7 +89,9 @@ function CadastroUsuario() {
         let errorMessage = `Erro: ${response.status} ${response.statusText}`;
         if (response.headers.get("content-type")?.includes("application/json")) {
             const errorData = await response.json();
-            errorMessage = errorData.message || (errorData.errors ? errorData.errors.map(e => e.defaultMessage).join(', ') : errorMessage);
+            errorMessage = errorData.message || 
+               (errorData.erros ? errorData.erros.join(', ') : 
+               (errorData.errors ? errorData.errors.map(e => e.defaultMessage || e).join(', ') : errorMessage));
         } else {
             const errorText = await response.text();
             if (errorText) errorMessage = errorText;
